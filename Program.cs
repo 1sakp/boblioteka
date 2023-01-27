@@ -7,45 +7,52 @@ namespace bobliotek
     {
         static void Main()
         {
-            string fullPath = "C:\\Users\\isak.palsson1\\source\\repos\\boblioteka\\login.txt";
 
-            Console.WriteLine("If you already have an account, Please write 'login'! To sign up write 'Sign up'!");
-            string choise = Console.ReadLine();
-            if (choise.ToLower() == "login")
+            start();
+
+            static void start()
             {
-                bool login = false;
-                Console.WriteLine("To log-in please write, Username:");
-                string username = Console.ReadLine();
-                Console.WriteLine("Pasword:");
-                string password = Console.ReadLine();
 
-                string check = File.ReadAllText(fullPath, Encoding.UTF8);
-                string[] checkarr = check.Split(Environment.NewLine);
-                for (int i = 0; i < checkarr.Length; i++)
+
+                string fullPath = "C:\\Users\\isak.palsson1\\source\\repos\\boblioteka\\login.txt";
+                
+                Console.WriteLine("If you already have an account, Please write 'login'! To sign up write 'Sign up'!");
+                string choise = Console.ReadLine();
+                if (choise.ToLower() == "login")
                 {
-                    if (checkarr[i].Contains(username) && checkarr[i].Contains(password))
+                    bool login = false;
+                    Console.WriteLine("To log-in please write, Username:");
+                    string username = Console.ReadLine();
+                    Console.WriteLine("Pasword:");
+                    string password = Console.ReadLine();
+
+                    string[] check = File.ReadAllLines(fullPath, Encoding.UTF8);
+                    for (int i = 0; i < check.Length; i++)
                     {
-                        Console.WriteLine("You have been logged in!");
-                        login = true;
+                        if (check[i].Contains(username.ToLower()) && check[i].Contains(password.ToLower()) && check[i].Any(x => !char.IsLetter(x)));
+                        {
+                            Console.WriteLine("You have been logged in!");
+                            login = true;
+                        }
+                    }
+
+                    if (login == false)
+                    {
+                        Console.WriteLine("wrong Username or pasword!");
+                    }
+
+                    if (login == true)
+                    {
+                        biblioacc();
                     }
                 }
-
-                if (login == false)
+                else if (choise.ToLower() == "sign up") ;
                 {
-                    Console.WriteLine("wrong Username or pasword!");
-                }
-
-                if (login == true)
-                {
-                    biblioacc();
+                    reg();
                 }
             }
-            else if (choise.ToLower() == "sign up");
-            {
-                bob();
-            }
 
-            static void bob(){
+            static void reg(){
                 string fullPath = "C:\\Users\\isak.palsson1\\source\\repos\\boblioteka\\login.txt";
 
                 bool loop = true;
@@ -69,12 +76,12 @@ namespace bobliotek
 
                         File.AppendAllLines(fullPath, lines);
 
-                        Main();
+                        Console.WriteLine("You have been registerd!");
+                        start();
                     }
-                    
                     else 
                     {
-                        Main();
+                        start();
                     }
                 }
             }
@@ -83,7 +90,95 @@ namespace bobliotek
             {
                 string fullPath = "C:\\Users\\isak.palsson1\\source\\repos\\boblioteka\\login.txt";
                 string choise = null;
+                Console.WriteLine("Do you want to search for a book, ('search') or add a book, ('add') or do you want to see all books?, ('view')");
+                choise = Console.ReadLine();
+
+                if (choise.ToLower() == "search")
+                {
+                    search();
+                }
+
+                if (choise.ToLower() == "add")
+                {
+                    add();
+                }
+
+                if (choise.ToLower() == "view")
+                {
+                    view();
+                }
             }
-        }
+
+            static void search()
+            {
+                string fullPath = "C:\\Users\\isak.palsson1\\source\\repos\\boblioteka\\books.txt";
+
+
+            }
+
+            static void add()
+            {
+                string fullPath = "C:\\Users\\isak.palsson1\\source\\repos\\boblioteka\\books.txt";
+
+                Console.WriteLine("Book Name?:  ");
+                string Book_Name = Console.ReadLine();
+                Console.WriteLine("Year Releesed?:  ");
+                string Relese_Year = Console.ReadLine();
+                Console.WriteLine("Page Number?:  ");
+                string Page_Num = Console.ReadLine();
+                //Convert.ToInt32(Page_Num);
+                Console.WriteLine("Author?: ");
+                string Author =Console.ReadLine();
+
+                string apend = Book_Name + "!" + Relese_Year + "!" + Page_Num + "!" + Author;
+                string[] lines = { apend };
+
+                File.AppendAllLines(fullPath, lines);
+
+                biblioacc();
+            }
+
+            static void view()
+            {
+                string fullPath = "C:\\Users\\isak.palsson1\\source\\repos\\boblioteka\\books.txt";
+
+                string[] Books = File.ReadAllLines(fullPath);
+                Console.WriteLine(Books);
+
+                foreach (string Book in Books)
+                {
+                    string[] Info = Book.Split("!");
+                    string Book_Name = Info[0];
+                    string Relese_Year = Info[1];
+                    string Page_Num = Info[2];
+                    string Author = Info[3];
+
+                    Book_class obj = new Book_class(Info[0], Info[1], Info[2], Info[3]);
+
+                    Console.WriteLine($"\nName: {obj.Book_Name_c}\nRelese Year: {obj.Relese_Year_c}\nNumber of Pages: {obj.Page_Num_c}\nAuthor: {obj.Author_c}\n");
+                }
+                Console.WriteLine("Press anny button to continue!... ");
+                string choise = Console.ReadLine();
+
+                biblioacc();
+            }
+        } 
     }
-}   
+    public class Book_class
+    {
+        public string Book_Name_c;
+        public string Relese_Year_c;
+        public string Page_Num_c;
+        public string Author_c;
+
+        public Book_class(string name, string relese, string pnum, string author)
+        {
+            this.Book_Name_c = name;
+            this.Relese_Year_c = relese;
+            this.Page_Num_c = pnum;
+            this.Author_c = author;
+        }
+
+
+    }
+}
