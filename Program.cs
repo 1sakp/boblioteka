@@ -13,7 +13,6 @@ namespace bobliotek
             static void start()
             {
 
-
                 string fullPath = "C:\\Users\\isak.palsson1\\source\\repos\\boblioteka\\login.txt";
                 
                 Console.WriteLine("If you already have an account, Please write 'login'! To sign up write 'Sign up'!");
@@ -90,7 +89,7 @@ namespace bobliotek
             {
                 string fullPath = "C:\\Users\\isak.palsson1\\source\\repos\\boblioteka\\login.txt";
                 string choise = null;
-                Console.WriteLine("Do you want to search for a book, ('search') or add a book, ('add') or do you want to see all books?, ('view')");
+                Console.WriteLine("Do you want to search for a book, ('search') or add a book, ('add') or do you want to see all books?, ('view'), or logout('logout')");
                 choise = Console.ReadLine();
 
                 if (choise.ToLower() == "search")
@@ -107,13 +106,65 @@ namespace bobliotek
                 {
                     view();
                 }
+
+                if (choise.ToLower() == "logout")
+                {
+                    logout();
+                }
+            }
+
+            static void logout()
+            {
+                Console.WriteLine("Confirm Y/N");
+                string choise = Console.ReadLine();
+
+                if (choise.ToLower() == "y")
+                {
+                    start();
+                }
+                else if (choise.ToLower() == "n")
+                {
+                    biblioacc();
+                }
+                else
+                {
+                    logout();
+                }
             }
 
             static void search()
             {
                 string fullPath = "C:\\Users\\isak.palsson1\\source\\repos\\boblioteka\\books.txt";
 
+                Console.WriteLine("What do you want to search for?: Author?('author'), Book Name?('name')?...   ");
+                string searchres = Console.ReadLine();
+                string[] Books = File.ReadAllLines(fullPath);
+                List<string> list = new List<string>();
+                List<string> list1 = new List<string>();
 
+                foreach (string Book in Books)
+                {
+                    string[] auth = Book.Split("!");
+                    
+                    list.Add(auth[3]);
+                    list.Add(auth[0]);
+
+                }
+                string[] Authors = list.ToArray();
+                string[] Names = list1.ToArray();
+
+                if (searchres.ToLower() == "author")
+                {
+
+                }
+                else if (searchres.ToLower() == "name")
+                {
+
+                }
+                else
+                {
+                    search();
+                }
             }
 
             static void add()
@@ -126,7 +177,6 @@ namespace bobliotek
                 string Relese_Year = Console.ReadLine();
                 Console.WriteLine("Page Number?:  ");
                 string Page_Num = Console.ReadLine();
-                //Convert.ToInt32(Page_Num);
                 Console.WriteLine("Author?: ");
                 string Author =Console.ReadLine();
 
@@ -145,6 +195,8 @@ namespace bobliotek
                 string[] Books = File.ReadAllLines(fullPath);
                 Console.WriteLine(Books);
 
+                int i = 0;
+
                 foreach (string Book in Books)
                 {
                     string[] Info = Book.Split("!");
@@ -155,9 +207,10 @@ namespace bobliotek
 
                     Book_class obj = new Book_class(Info[0], Info[1], Info[2], Info[3]);
 
-                    Console.WriteLine($"\nName: {obj.Book_Name_c}\nRelese Year: {obj.Relese_Year_c}\nNumber of Pages: {obj.Page_Num_c}\nAuthor: {obj.Author_c}\n");
+                    Console.WriteLine($"[{i}]\nName: {obj.Book_Name_c}\nRelese Year: {obj.Relese_Year_c}\nNumber of Pages: {obj.Page_Num_c}\nAuthor: {obj.Author_c}\n");
+                    i++;
                 }
-                Console.WriteLine("Press anny button to continue!... ");
+                Console.WriteLine("Press 'Enter' button to continue!... ");
                 string choise = Console.ReadLine();
 
                 biblioacc();
